@@ -48,11 +48,84 @@ export default {
     return responseToJson;
   },
 
+  signOut: async () => {
+    const token = await AsyncStorage.getItem('token');
+
+    await fetch(`${BASER_URL}/auth/logout`, {
+      method: 'POST',
+      headers: {
+        Accept: 'aplication/json',
+        'Content-type' : 'aplication/json'
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    return;
+  },
+
   getBarbers: async (latitude=null, longitude=null, address=null) => {
     const token = await AsyncStorage.getItem('token');
 
     const req = await fetch(`${BASER_URL}/barbers?token=${token}&lat=${latitude}&lng=${longitude}&address=${address}`);
-    const responseToJson = req.json();
+    const responseToJson = await req.json();
+
+    return responseToJson;
+  },
+
+  getBarber: async (id) => {
+    const token = await AsyncStorage.getItem('token');
+
+    const req = await fetch(`${BASER_URL}/barber/${id}?token=${token}`);
+
+    const responseToJson = await req.json();
+    return responseToJson;
+  },
+
+  setFavorited: async (barberId) => {
+    const token = await AsyncStorage.getItem('token');
+
+    const req = await fetch(`${BASER_URL}/user/favorite`, {
+      method: 'POST',
+      headers: {
+        Accept: 'aplication/json',
+        'Content-type' : 'aplication/json'
+      },
+      body: JSON.stringify({ barber: barberId, token }),
+    });
+
+    const responseToJson = await req.json();
+
+    return responseToJson;
+  },
+
+  setAppointments: async (
+    userId,
+    serviceChoosed,
+    selectedYear,
+    selectedMonth,
+    selectedDay,
+    selectedHour
+  ) => {
+    const token = await AsyncStorage.getItem('token');
+
+    const req = await fetch(`${BASER_URL}/user/appointment`, {
+      method: 'POST',
+      headers: {
+        Accept: 'aplication/json',
+        'Content-type' : 'aplication/json'
+      },
+      body: JSON.stringify({
+        token,
+        id: userId,
+        service: serviceChoosed,
+        year: selectedYear,
+        month: selectedMonth,
+        day: selectedDay,
+        hour: selectedHour
+      }),
+    });
+
+    const responseToJson = await req.json();
 
     return responseToJson;
   }

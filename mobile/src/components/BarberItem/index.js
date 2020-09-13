@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 import Stars from '../Stars';
 
@@ -12,10 +13,20 @@ import {
 } from './styles';
 
 const BarberItem = ({ data }) => {
-  return (
-    <Container>
-      <Avatar source={{ uri: data.avatar }} />
+  const navigation = useNavigation();
 
+  const goToBarber = useCallback(() => {
+    navigation.navigate('Barber', {
+      id: data.id,
+      name: data.name,
+      avatar: data.avatar,
+      stars: data.stars,
+    });
+  },[]);
+
+  return (
+    <Container onPress={goToBarber}>
+      <Avatar source={{ uri: data.avatar }} />
 
       <InfoArea>
         <UserName>{data.name}</UserName>
